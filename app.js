@@ -35,11 +35,6 @@ console.log(User);
 res.status(200).render('User.ejs', {User})
 })
 
-app.post('/User-add', async(req,res)=>{
-  const unit = new Users(req.body)
-  await unit.save()
-  res.status(200).json({message: 'success'})
-})
 app.get('/table',async(req,res)=>{
   res.render('TransferTable.ejs')
 })
