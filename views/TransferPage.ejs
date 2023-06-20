@@ -1,0 +1,109 @@
+<!-- users.ejs -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Transfer Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      input[type="number"] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none; /* Remove the spinner */
+        margin: 0; /* Remove extra space */
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      li {
+        background-color: #fff;
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+      }
+      li:hover {
+        background-color: #f5f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <label for="amountInput">Amount to send:</label>
+    <input type="number" id="amountInput" />
+    <h1>Choose someone to send the amount to</h1>
+    <ul id="user-list"></ul>
+
+    <script>
+      // Fetch users from the backend API
+      fetch("/Users")
+        .then((response) => response.json())
+        .then((data) => {
+          const users = data.users;
+          renderUsers(users);
+        })
+        .catch((error) => console.log("Error:", error));
+      function renderUsers(users) {
+        const userList = document.getElementById("user-list");
+        users.forEach((user) => {
+          if (user._id !== "<%= FromId %>") {
+            const listItem = document.createElement("li");
+            listItem.innerText = user.Name;
+            listItem.addEventListener("click", () => {
+              const person = users.find((obj) => obj.Name === user.Name);
+              const Amount = document.getElementById("amountInput").value;
+              TransferMoney(Amount, person);
+            });
+            userList.appendChild(listItem);
+          }
+        });
+
+        function TransferMoney(Amount, person) {
+          const requestData = {
+            Amount: Amount,
+            id: person._id,
+          };
+          const requestOptions = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+          };
+          fetch(`http://localhost:3000/Transfer/<%= FromId %>`, requestOptions)
+            .then((response) => response.json())
+            .then((data) => {
+              // Redirect the page to the retrieved URL
+              window.location.href = `http://localhost:3000${data.redirect}`;
+            })
+            .catch((error) => {
+              console.log("Error:", error);
+            });
+        }
+      }
+    </script>
+  </body>
+</html>

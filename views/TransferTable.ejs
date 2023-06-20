@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Transfer Table</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+
+      h1 {
+        text-align: center;
+        padding: 20px 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Transfer Table</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Sender</th>
+          <th>Receiver</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody id="transactionData"></tbody>
+    </table>
+
+    <script>
+      // Function to fetch and display transaction data
+      function fetchTransactionData() {
+        fetch("http://localhost:3000/TransferHistory")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            const transactionData = document.getElementById("transactionData");
+            data.transaction.forEach((transaction) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+              <td>${transaction.FromName}</td>
+              <td>${transaction.ToName}</td>
+              <td>${transaction.Amount}</td>
+            `;
+              transactionData.appendChild(row);
+            });
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      fetchTransactionData();
+    </script>
+  </body>
+</html>
