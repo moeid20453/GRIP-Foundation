@@ -17,7 +17,7 @@ app.use(express.json());
 
 
 
-app.get('/Home',async(req,res)=>{
+app.get('/',async(req,res)=>{
   res.render('Home.ejs')
 })
 
@@ -75,6 +75,6 @@ app.post("/Transfer/:id", async(req,res)=>{
   
   return res.status(200).json({redirect: "/Customers"})}
 })
-
-let Port = 3000;
-app.listen(Port, () => {console.log(`server is running at port ${Port}`);})
+const port = process.env.PORT || 3000;
+app.listen(port, () =>
+console.log(`Server is listening on port ${port}.`));
