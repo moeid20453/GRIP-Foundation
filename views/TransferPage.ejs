@@ -94,13 +94,13 @@
             body: JSON.stringify(requestData),
           };
           fetch(
-            `https://moeid20453.github.io/Transfer/<%= FromId %>`,
+            `http://bank-grip.us-east-1.elasticbeanstalk.com/Transfer/<%= FromId %>`,
             requestOptions
           )
             .then((response) => response.json())
             .then((data) => {
               // Redirect the page to the retrieved URL
-              window.location.href = `https://moeid20453.github.io/${data.redirect}`;
+              window.location.href = `http://bank-grip.us-east-1.elasticbeanstalk.com/${data.redirect}`;
             })
             .catch((error) => {
               console.log("Error:", error);
